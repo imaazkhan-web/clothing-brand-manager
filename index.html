@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VogueStudio - Clothing Brand Management System</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+    
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-header">
+        <div class="brand-logo">
+          <i class="fa-solid fa-vest-patches"></i>
+        </div>
+        <div class="brand-info">
+          <h2 class="brand-title">VOGUE STUDIO</h2>
+          <span class="brand-subtitle">Fashion ERP & POS</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">MAIN MENU</div>
+        <a href="#dashboard" class="nav-item active" data-tab="dashboard">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#inventory" class="nav-item" data-tab="inventory">
+          <i class="fa-solid fa-shirt"></i>
+          <span>Apparel Stock</span>
+          <span class="badge badge-warning" id="low-stock-badge">3 Low</span>
+        </a>
+        <a href="#orders" class="nav-item" data-tab="orders">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span>Orders & Sales</span>
+          <span class="badge badge-info" id="pending-orders-badge">5</span>
+        </a>
+        <a href="#stitching" class="nav-item" data-tab="stitching">
+          <i class="fa-solid fa-scissors"></i>
+          <span>Stitching & Fabric</span>
+        </a>
+        <a href="#pos" class="nav-item" data-tab="pos">
+          <i class="fa-solid fa-receipt"></i>
+          <span>POS Billing</span>
+        </a>
+
+        <div class="nav-section-title">FINANCE & CRM</div>
+        <a href="#crm" class="nav-item" data-tab="crm">
+          <i class="fa-solid fa-users"></i>
+          <span>Customer & Khata</span>
+        </a>
+        <a href="#expenses" class="nav-item" data-tab="expenses">
+          <i class="fa-solid fa-wallet"></i>
+          <span>Expenses & Profit</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <div class="avatar"><i class="fa-solid fa-user-tie"></i></div>
+          <div class="user-info">
+            <span class="user-name">Manager Admin</span>
+            <span class="user-role">Main Branch - Lahore</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
+      
+      <!-- TOP NAVBAR -->
+      <header class="top-navbar">
+        <button class="mobile-toggle" id="menu-toggle">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="global-search" placeholder="Search articles, SKU, order #, or customer name...">
+        </div>
+
+        <div class="top-actions">
+          <button class="btn btn-secondary" onclick="app.openModal('add-product-modal')">
+            <i class="fa-solid fa-plus"></i> New Product
+          </button>
+          <button class="btn btn-primary" onclick="app.switchTab('pos')">
+            <i class="fa-solid fa-cash-register"></i> Quick POS
+          </button>
+
+          <div class="notification-wrapper">
+            <button class="icon-btn" id="notif-btn">
+              <i class="fa-solid fa-bell"></i>
+              <span class="notif-dot"></span>
+            </button>
+            <div class="notif-dropdown" id="notif-dropdown">
+              <div class="notif-header">
+                <h4>Notifications</h4>
+                <span class="badge badge-rose">3 New</span>
+              </div>
+              <div class="notif-list">
+                <div class="notif-item unread">
+                  <i class="fa-solid fa-triangle-exclamation text-warning"></i>
+                  <div>
+                    <p><strong>Low Stock Alert:</strong> Velvet Suit (Medium) only 2 left!</p>
+                    <small>10 mins ago</small>
+                  </div>
+                </div>
+                <div class="notif-item unread">
+                  <i class="fa-solid fa-truck-fast text-info"></i>
+                  <div>
+                    <p><strong>Courier Update:</strong> 4 COD orders dispatched via TCS.</p>
+                    <small>1 hour ago</small>
+                  </div>
+                </div>
+                <div class="notif-item">
+                  <i class="fa-solid fa-scissors text-rose"></i>
+                  <div>
+                    <p><strong>Stitching Ready:</strong> Batch #104 Lawn Kurti ready from tailor.</p>
+                    <small>3 hours ago</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- DYNAMIC VIEWS -->
+      <div class="content-body">
+        
+        <!-- ==================== 1. DASHBOARD TAB ==================== -->
+        <section id="view-dashboard" class="tab-view active">
+          <div class="view-header">
+            <div>
+              <h1 class="page-title">Brand Executive Dashboard</h1>
+              <p class="page-subtitle">Real-time overview of sales, stitching progress, and stock status.</p>
+            </div>
+            <div class="date-picker-badge">
+              <i class="fa-regular fa-calendar-days"></i>
+              <span>August 2026</span>
+            </div>
+          </div>
+
+          <!-- KPI Cards -->
+          <div class="kpi-grid">
+            <div class="kpi-card gold-border">
+              <div class="kpi-icon gold"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+              <div class="kpi-details">
+                <span class="kpi-label">Monthly Revenue</span>
+                <h3 class="kpi-value" id="kpi-revenue">PKR 1,845,000</h3>
+                <span class="kpi-trend positive"><i class="fa-solid fa-arrow-up"></i> +14.2% from last mo.</span>
+              </div>
+            </div>
+
+            <div class="kpi-card rose-border">
+              <div class="kpi-icon rose"><i class="fa-solid fa-bag-shopping"></i></div>
+              <div class="kpi-details">
+                <span class="kpi-label">Total Orders</span>
+                <h3 class="kpi-value" id="kpi-orders">342 Orders</h3>
+                <span class="kpi-subtext">28 Pending Delivery</span>
+              </div>
+            </div>
+
+            <div class="kpi-card purple-border">
+              <div class="kpi-icon purple"><i class="fa-solid fa-scissors"></i></div>
+              <div class="kpi-details">
+                <span class="kpi-label">In Stitching Pipeline</span>
+                <h3 class="kpi-value" id="kpi-stitching">120 Pieces</h3>
+                <span class="kpi-subtext">3 Master Tailor Batches</span>
+              </div>
+            </div>
+
+            <div class="kpi-card info-border">
+              <div class="kpi-icon info"><i class="fa-solid fa-boxes-stacked"></i></div>
+              <div class="kpi-details">
+                <span class="kpi-label">Total Stock Value</span>
+                <h3 class="kpi-value" id="kpi-stock-val">PKR 3,450,000</h3>
+                <span class="kpi-trend warning"><i class="fa-solid fa-triangle-exclamation"></i> 4 variants low</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="grid-2-col gap-lg mt-lg">
+            <div class="card shadow-sm">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-chart-area text-gold"></i> Sales & Revenue Growth (PKR)</h3>
+              </div>
+              <div class="card-body">
+                <canvas id="salesChart" height="220"></canvas>
+              </div>
+            </div>
+
+            <div class="card shadow-sm">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-chart-pie text-rose"></i> Apparel Category Breakdown</h3>
+              </div>
+              <div class="card-body flex-center">
+                <canvas id="categoryChart" height="220"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Selling Articles & Quick Actions -->
+          <div class="grid-3-col-1-2 gap-lg mt-lg">
+            
+            <!-- Quick Shortcuts -->
+            <div class="card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-bolt text-gold"></i> Fast Actions</h3>
+              </div>
+              <div class="card-body quick-buttons-grid">
+                <button class="quick-action-btn" onclick="app.switchTab('pos')">
+                  <i class="fa-solid fa-cash-register text-gold"></i>
+                  <span>New Store Sale</span>
+                </button>
+                <button class="quick-action-btn" onclick="app.openModal('add-product-modal')">
+                  <i class="fa-solid fa-shirt text-purple"></i>
+                  <span>Add Article</span>
+                </button>
+                <button class="quick-action-btn" onclick="app.openModal('add-stitching-modal')">
+                  <i class="fa-solid fa-scissors text-rose"></i>
+                  <span>Send to Tailor</span>
+                </button>
+                <button class="quick-action-btn" onclick="app.openModal('add-order-modal')">
+                  <i class="fa-solid fa-truck text-info"></i>
+                  <span>Add Courier COD</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Recent Top Articles -->
+            <div class="card">
+              <div class="card-header flex-between">
+                <h3><i class="fa-solid fa-fire text-rose"></i> Top Performing Articles</h3>
+                <a href="#inventory" onclick="app.switchTab('inventory')" class="link-btn">View All Stock &rarr;</a>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Article / Collection</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Sold</th>
+                        <th>Stock Left</th>
+                      </tr>
+                    </thead>
+                    <tbody id="top-articles-list">
+                      <!-- Rendered by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- ==================== 2. APPAREL INVENTORY TAB ==================== -->
+        <section id="view-inventory" class="tab-view">
+          <div class="view-header">
+            <div>
+              <h1 class="page-title">Apparel & Stock Inventory</h1>
+              <p class="page-subtitle">Manage clothing articles, sizes, colors, fabric specs, and stock levels.</p>
+            </div>
+            <button class="btn btn-primary" onclick="app.openModal('add-product-modal')">
+              <i class="fa-solid fa-plus"></i> Add New Clothing Article
+            </button>
+          </div>
+
+          <!-- Inventory Filters -->
+          <div class="filter-bar card p-md mb-lg">
+            <div class="filter-group">
+              <div class="search-input">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="inv-search" placeholder="Search by Article Name or SKU..." onkeyup="app.filterInventory()">
+              </div>
+              <select class="form-select" id="inv-category-filter" onchange="app.filterInventory()">
+                <option value="ALL">All Categories</option>
+                <option value="Pret 3-Piece">Pret 3-Piece</option>
+                <option value="Unstitched Lawn">Unstitched Lawn</option>
+                <option value="Embroidered Kurti">Embroidered Kurti</option>
+                <option value="Mens Wear">Mens Wear</option>
+                <option value="Western / Tops">Western / Tops</option>
+              </select>
+
+              <select class="form-select" id="inv-stock-status" onchange="app.filterInventory()">
+                <option value="ALL">All Stock Levels</option>
+                <option value="LOW">Low Stock (< 5)</option>
+                <option value="IN_STOCK">In Stock</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Stock Table -->
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Image</th>
+                      <th>Article & SKU</th>
+                      <th>Category & Fabric</th>
+                      <th>Sizes Available</th>
+                      <th>Retail Price</th>
+                      <th>Total Stock</th>
+                      <th>Status</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inventory-table-body">
+                    <!-- Rendered by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================== 3. ORDERS & SALES TAB ==================== -->
+        <section id="view-orders" class="tab-view">
+          <div class="view-header">
+            <div>
+              <h1 class="page-title">Sales & Orders Management</h1>
+              <p class="page-subtitle">Track online orders, Instagram/WhatsApp DM sales, and courier shipments.</p>
+            </div>
+            <button class="btn btn-primary" onclick="app.openModal('add-order-modal')">
+              <i class="fa-solid fa-cart-plus"></i> Create Online / DM Order
+            </button>
+          </div>
+
+          <!-- Status Pill Tabs -->
+          <div class="tabs-header mb-md">
+            <button class="tab-pill active" onclick="app.filterOrders('ALL', this)">All Orders</button>
+            <button class="tab-pill" onclick="app.filterOrders('Pending', this)">Pending Stitch/Pack</button>
+            <button class="tab-pill" onclick="app.filterOrders('Shipped', this)">Shipped (Courier COD)</button>
+            <button class="tab-pill" onclick="app.filterOrders('Delivered', this)">Delivered</button>
+            <button class="tab-pill" onclick="app.filterOrders('Cancelled', this)">Returned / Cancelled</button>
+          </div>
+
+          <!-- Orders Table -->
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer & City</th>
+                      <th>Channel</th>
+                      <th>Items & Sizes</th>
+                      <th>Total Amount</th>
+                      <th>Payment Status</th>
+                      <th>Order Status</th>
+                      <th class="text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="orders-table-body">
+                    <!-- Rendered by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================== 4. STITCHING & PRODUCTION TAB ==================== -->
+        <section id="view-stitching" class="tab-view">
+          <div class="view-header">
+            <div>
+              <h1 class="page-title">Stitching & Raw Fabric Production</h1>
+              <p class="page-subtitle">Track fabric rolls, tailor batches, cutting, embroidery, and stitching labor costs.</p>
+            </div>
+            <button class="btn btn-primary" onclick="app.openModal('add-stitching-modal')">
+              <i class="fa-solid fa-plus"></i> New Stitching Batch
+            </button>
+          </div>
+
+          <div class="grid-2-col gap-lg">
+            <!-- Tailor/Stitching Batches In-Progress -->
+            <div class="card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-scissors text-gold"></i> Active Tailor Batches</h3>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Batch #</th>
+                        <th>Master Tailor</th>
+                        <th>Article Name</th>
+                        <th>Qty</th>
+                        <th>Labor Cost/Pc</th>
+                        <th>Stage</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="stitching-batches-body">
+                      <!-- Rendered by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fabric & Raw Materials Stock -->
+            <div class="card">
+              <div class="card-header flex-between">
+                <h3><i class="fa-solid fa-scroll text-rose"></i> Raw Fabric & Trims Ledger</h3>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Fabric Type / Trim</th>
+                        <th>Color</th>
+                        <th>Meters / Qty</th>
+                        <th>Cost/Meter</th>
+                        <th>Supplier</th>
+                      </tr>
+                    </thead>
+                    <tbody id="fabric-stock-body">
+                      <!-- Rendered by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================== 5. POS BILLING & INVOICES TAB ==================== -->
+        <section id="view-pos" class="tab-view">
+          <div class="view-header">
+            <div>
+              <h1 class="page-title">Point of Sale (Retail Store Checkout)</h1>
+              <p class="page-subtitle">Quick store billing, receipt print, discount management, and instant stock update.</p>
+            </div>
+          </div>
+
+          <div class="grid-pos gap-lg">
+            <!-- Left: Item Selector Grid -->
+            <div class="pos-catalog card p-md">
+              <div class="pos-search-bar mb-md">
+                <input type="text" id="pos-search" placeholder="Type article name or scan barcode SKU..." onkeyup="app.renderPosCatalog()">
+                <select id="pos-category-filter" class="form-select" onchange="app.renderPosCatalog()">
+                  <option value="ALL">All Categories</option>
+                  <option value="Pret 3-Piece">Pret 3-Piece</option>
+                  <option value="Unstitched Lawn">Unstitched Lawn</option>
+                  <option value="Embroidered Kurti">Embroidered Kurti</option>
+                  <option value="Mens Wear">Mens Wear</option>
+                </select>
+              </div>
+
+              <div class="pos-items-grid" id="pos-items-container">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+            <!-- Right: Billing Cart & Receipt Generator -->
+            <div class="pos-cart card p-md">
+              <div class="cart-header border-bottom pb-sm mb-md flex-between">
+                <h3><i class="fa-solid fa-cart-shopping text-gold"></i> Current Sale Ticket</h3>
+                <button class="btn btn-xs btn-danger" onclick="app.clearPosCart()">Clear</button>
+              </div>
+
+              <!-- Customer Selector -->
+              <div class="form-group mb-sm">
+                <label>Customer Name / Phone</label>
+                <input type="text" id="pos-customer-name" class="form-control-sm" placeholder="Walk-in Customer (or Enter Name)">
+              </div>
+
+              <!-- Cart Items List -->
+              <div class="pos-cart-list" id="pos-cart-items">
+                <p class="text-muted text-center py-lg">Cart is empty. Click apparel items to add.</p>
+              </div>
+
+              <!-- Summary & Checkout -->
+              <div class="cart-summary border-top pt-sm mt-md">
+                <div class="summary-line">
+                  <span>Subtotal:</span>
+                  <span id="pos-subtotal">PKR 0</span>
+                </div>
+                <div class="summary-line">
+                  <span>Discount (PKR):</span>
+                  <input type="number" id="pos-discount" class="form-control-xs" value="0" min="0" onchange="app.calcPosTotal()">
+                </div>
+                <div class="summary-line font-bold text-lg border-top pt-xs mt-xs">
+                  <span>Grand Total:</span>
+                  <span class="text-gold" id="pos-grand-total">PKR 0</span>
+                </div>
+
+                <div class="payment-method-selector my-sm">
+                  <label>Payment Method:</label>
+                  <div class="radio-group">
+                    <label><input type="radio" name="pos-payment" value="Cash" checked> Cash</label>
+                    <label><input type="radio" name="pos-payment" value="Card"> Card</label>
+                    <label><input type="radio" name="pos-payment" value="Bank Transfer"> Bank / QR</label>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary btn-block btn-lg mt-sm" onclick="app.checkoutPos()">
+                  <i class="fa-solid fa-print"></i> Complete Sale & Print Receipt
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================== 6. CUSTOMER & WHOLESALE CRM TAB ==================== -->
+        <section id="view-crm" class="tab-view">
+          <div class="view-header">
+            <div>
+              <h1 class="page-title">Customer & Wholesale Udhaar Ledger</h1>
+              <p class="page-subtitle">Track wholesale buyers, retail history, credit balance, and pending payouts.</p>
+            </div>
+            <button class="btn btn-primary" onclick="app.openModal('add-customer-modal')">
+              <i class="fa-solid fa-user-plus"></i> Add Customer / Wholesaler
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Name / Business</th>
+                      <th>Type</th>
+                      <th>Phone / City</th>
+                      <th>Total Orders</th>
+                      <th>Outstanding Udhaar (Credit)</th>
+                      <th>Status</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="customer-table-body">
+                    <!-- Rendered by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==================== 7. EXPENSES & FINANCIALS TAB ==================== -->
+        <section id="view-expenses" class="tab-view">
+          <div class="view-header">
+            <div>
+              <h1 class="page-title">Business Expenses & Profit Analytics</h1>
+              <p class="page-subtitle">Track fabric costs, tailor wages, shop rent, marketing ads, and net profit margins.</p>
+            </div>
+            <button class="btn btn-primary" onclick="app.openModal('add-expense-modal')">
+              <i class="fa-solid fa-plus"></i> Record Expense
+            </button>
+          </div>
+
+          <div class="grid-2-col gap-lg">
+            <div class="card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-money-bill-transfer text-gold"></i> Expense Log</h3>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount (PKR)</th>
+                        <th>Paid Via</th>
+                      </tr>
+                    </thead>
+                    <tbody id="expense-table-body">
+                      <!-- Rendered by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3><i class="fa-solid fa-scale-balanced text-rose"></i> Monthly Profit Breakdown</h3>
+              </div>
+              <div class="card-body p-lg">
+                <div class="financial-summary-box mb-md">
+                  <div class="fin-row">
+                    <span>Total Sales Revenue:</span>
+                    <strong class="text-success" id="fin-total-revenue">PKR 1,845,000</strong>
+                  </div>
+                  <div class="fin-row">
+                    <span>Cost of Goods (Fabric & Stitching):</span>
+                    <strong class="text-warning" id="fin-cogs">PKR 850,000</strong>
+                  </div>
+                  <div class="fin-row">
+                    <span>Operating Expenses (Rent, Ads, Courier):</span>
+                    <strong class="text-warning" id="fin-opex">PKR 280,000</strong>
+                  </div>
+                  <div class="fin-row total border-top pt-sm mt-sm">
+                    <span>Net Business Profit:</span>
+                    <strong class="text-gold text-xl" id="fin-net-profit">PKR 715,000</strong>
+                  </div>
+                </div>
+                <p class="text-muted small">* Calculations automatically update based on completed sales and recorded expense entries.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- 1. Add Product Modal -->
+  <div class="modal-overlay" id="add-product-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-shirt text-gold"></i> Add New Clothing Article</h3>
+        <button class="modal-close" onclick="app.closeModal('add-product-modal')">&times;</button>
+      </div>
+      <form id="product-form" onsubmit="app.saveProduct(event)">
+        <div class="modal-body">
+          <div class="grid-2-col gap-md">
+            <div class="form-group">
+              <label>Article Name *</label>
+              <input type="text" id="prod-name" class="form-control" placeholder="e.g. Royal Velvet 3-Pc Suit" required>
+            </div>
+            <div class="form-group">
+              <label>SKU Code *</label>
+              <input type="text" id="prod-sku" class="form-control" placeholder="e.g. VOG-2026-VLV" required>
+            </div>
+          </div>
+
+          <div class="grid-3-col gap-md my-sm">
+            <div class="form-group">
+              <label>Category</label>
+              <select id="prod-category" class="form-select">
+                <option value="Pret 3-Piece">Pret 3-Piece</option>
+                <option value="Unstitched Lawn">Unstitched Lawn</option>
+                <option value="Embroidered Kurti">Embroidered Kurti</option>
+                <option value="Mens Wear">Mens Wear</option>
+                <option value="Western / Tops">Western / Tops</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Fabric Material</label>
+              <input type="text" id="prod-fabric" class="form-control" placeholder="e.g. Pure Lawn / Organza" required>
+            </div>
+            <div class="form-group">
+              <label>Collection Tag</label>
+              <input type="text" id="prod-collection" class="form-control" placeholder="e.g. Summer '26 / Festive">
+            </div>
+          </div>
+
+          <div class="grid-2-col gap-md my-sm">
+            <div class="form-group">
+              <label>Retail Price (PKR) *</label>
+              <input type="number" id="prod-price" class="form-control" placeholder="e.g. 7500" required>
+            </div>
+            <div class="form-group">
+              <label>Cost Price (Fabric+Stitching) (PKR)</label>
+              <input type="number" id="prod-cost" class="form-control" placeholder="e.g. 3800" required>
+            </div>
+          </div>
+
+          <div class="form-group my-sm">
+            <label>Size Variant Stock Quantity</label>
+            <div class="size-input-grid">
+              <div>
+                <label class="small">Small (S)</label>
+                <input type="number" id="prod-size-s" class="form-control" value="10" min="0">
+              </div>
+              <div>
+                <label class="small">Medium (M)</label>
+                <input type="number" id="prod-size-m" class="form-control" value="15" min="0">
+              </div>
+              <div>
+                <label class="small">Large (L)</label>
+                <input type="number" id="prod-size-l" class="form-control" value="10" min="0">
+              </div>
+              <div>
+                <label class="small">XL / Custom</label>
+                <input type="number" id="prod-size-xl" class="form-control" value="5" min="0">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Image URL (Optional)</label>
+            <input type="text" id="prod-image" class="form-control" placeholder="https://images.unsplash.com/photo-1583391733956... (or leave blank for placeholder)">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="app.closeModal('add-product-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Apparel Article</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Create Online/DM Order Modal -->
+  <div class="modal-overlay" id="add-order-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-truck text-info"></i> Create Online / WhatsApp Order</h3>
+        <button class="modal-close" onclick="app.closeModal('add-order-modal')">&times;</button>
+      </div>
+      <form id="order-form" onsubmit="app.saveOrder(event)">
+        <div class="modal-body">
+          <div class="grid-2-col gap-md">
+            <div class="form-group">
+              <label>Customer Name *</label>
+              <input type="text" id="ord-cust-name" class="form-control" placeholder="e.g. Ayesha Khan" required>
+            </div>
+            <div class="form-group">
+              <label>Phone / WhatsApp *</label>
+              <input type="text" id="ord-cust-phone" class="form-control" placeholder="0300-1234567" required>
+            </div>
+          </div>
+
+          <div class="grid-2-col gap-md my-sm">
+            <div class="form-group">
+              <label>City *</label>
+              <input type="text" id="ord-city" class="form-control" placeholder="e.g. Lahore / Karachi / Islamabad" required>
+            </div>
+            <div class="form-group">
+              <label>Order Source Channel</label>
+              <select id="ord-channel" class="form-select">
+                <option value="Instagram DM">Instagram DM</option>
+                <option value="WhatsApp">WhatsApp</option>
+                <option value="Website">Website</option>
+                <option value="Wholesale Client">Wholesale Client</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Delivery Address</label>
+            <textarea id="ord-address" class="form-control" rows="2" placeholder="Full shipping house address..."></textarea>
+          </div>
+
+          <div class="grid-2-col gap-md my-sm">
+            <div class="form-group">
+              <label>Select Article *</label>
+              <select id="ord-product-select" class="form-select" onchange="app.updateOrderPricePreview()">
+                <!-- Rendered dynamically -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Size Variant *</label>
+              <select id="ord-size-select" class="form-select">
+                <option value="S">Small (S)</option>
+                <option value="M">Medium (M)</option>
+                <option value="L">Large (L)</option>
+                <option value="XL">XL</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2-col gap-md my-sm">
+            <div class="form-group">
+              <label>Total Price (PKR) *</label>
+              <input type="number" id="ord-price" class="form-control" placeholder="7500" required>
+            </div>
+            <div class="form-group">
+              <label>Payment Method</label>
+              <select id="ord-payment" class="form-select">
+                <option value="Cash on Delivery (COD)">Cash on Delivery (COD)</option>
+                <option value="Bank Transfer (Paid)">Bank Transfer (Paid)</option>
+                <option value="JazzCash / EasyPaisa">JazzCash / EasyPaisa</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="app.closeModal('add-order-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Dispatch / Save Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Add Stitching Batch Modal -->
+  <div class="modal-overlay" id="add-stitching-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-scissors text-rose"></i> Assign New Stitching Batch</h3>
+        <button class="modal-close" onclick="app.closeModal('add-stitching-modal')">&times;</button>
+      </div>
+      <form id="stitching-form" onsubmit="app.saveStitchingBatch(event)">
+        <div class="modal-body">
+          <div class="grid-2-col gap-md">
+            <div class="form-group">
+              <label>Master Tailor / Unit Name *</label>
+              <input type="text" id="stitch-tailor" class="form-control" placeholder="e.g. Master Aslam (Unit 2)" required>
+            </div>
+            <div class="form-group">
+              <label>Article Name / Design # *</label>
+              <input type="text" id="stitch-article" class="form-control" placeholder="e.g. Festivity Velvet Kurti" required>
+            </div>
+          </div>
+
+          <div class="grid-3-col gap-md my-sm">
+            <div class="form-group">
+              <label>Total Quantity (Pieces) *</label>
+              <input type="number" id="stitch-qty" class="form-control" placeholder="40" required>
+            </div>
+            <div class="form-group">
+              <label>Stitching Cost / Piece (PKR) *</label>
+              <input type="number" id="stitch-cost" class="form-control" placeholder="650" required>
+            </div>
+            <div class="form-group">
+              <label>Current Stage</label>
+              <select id="stitch-stage" class="form-select">
+                <option value="Cutting">Cutting</option>
+                <option value="Embroidery">Embroidery</option>
+                <option value="Stitching">Stitching</option>
+                <option value="Quality Check">Quality Check</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="app.closeModal('add-stitching-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Assign Batch</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Add Customer Modal -->
+  <div class="modal-overlay" id="add-customer-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-user-plus text-gold"></i> Add Customer / Wholesale Buyer</h3>
+        <button class="modal-close" onclick="app.closeModal('add-customer-modal')">&times;</button>
+      </div>
+      <form id="customer-form" onsubmit="app.saveCustomer(event)">
+        <div class="modal-body">
+          <div class="grid-2-col gap-md">
+            <div class="form-group">
+              <label>Name / Shop Name *</label>
+              <input type="text" id="cust-name" class="form-control" placeholder="e.g. Al-Madina Garments (Faisalabad)" required>
+            </div>
+            <div class="form-group">
+              <label>Customer Type *</label>
+              <select id="cust-type" class="form-select">
+                <option value="Wholesale Buyer">Wholesale Buyer</option>
+                <option value="Retail VIP">Retail VIP</option>
+                <option value="Walk-in Client">Walk-in Client</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2-col gap-md my-sm">
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <input type="text" id="cust-phone" class="form-control" placeholder="0312-9876543" required>
+            </div>
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" id="cust-city" class="form-control" placeholder="Faisalabad">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Initial Opening Balance / Udhaar Credit (PKR)</label>
+            <input type="number" id="cust-credit" class="form-control" placeholder="0" value="0">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="app.closeModal('add-customer-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Customer Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. Add Expense Modal -->
+  <div class="modal-overlay" id="add-expense-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-wallet text-gold"></i> Record Business Expense</h3>
+        <button class="modal-close" onclick="app.closeModal('add-expense-modal')">&times;</button>
+      </div>
+      <form id="expense-form" onsubmit="app.saveExpense(event)">
+        <div class="modal-body">
+          <div class="grid-2-col gap-md">
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="exp-category" class="form-select">
+                <option value="Fabric Purchase">Fabric Purchase</option>
+                <option value="Tailor Wages">Tailor / Stitching Wages</option>
+                <option value="Shop Rent & Bills">Shop Rent & Bills</option>
+                <option value="Marketing / Ads">Marketing / Ads (Instagram/FB)</option>
+                <option value="Packaging & Courier">Packaging & Courier Fees</option>
+                <option value="Staff Salaries">Staff Salaries</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Amount (PKR) *</label>
+              <input type="number" id="exp-amount" class="form-control" placeholder="25000" required>
+            </div>
+          </div>
+
+          <div class="form-group my-sm">
+            <label>Description / Note *</label>
+            <input type="text" id="exp-desc" class="form-control" placeholder="e.g. Paid 200 Meters Lawn Fabric to Mill" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="app.closeModal('add-expense-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Expense Entry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. Print Thermal Invoice Receipt Modal -->
+  <div class="modal-overlay" id="receipt-modal">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-receipt text-gold"></i> Store Receipt</h3>
+        <button class="modal-close" onclick="app.closeModal('receipt-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="receipt-box" id="printable-receipt">
+          <div class="receipt-header text-center mb-md">
+            <h2 style="margin:0;">VOGUE STUDIO</h2>
+            <p class="small text-muted" style="margin:2px 0;">Luxury Apparel & Couture</p>
+            <p class="small" style="margin:0;">Main Gulberg III, Lahore | Ph: 042-3587900</p>
+            <hr class="receipt-divider">
+            <div class="flex-between small">
+              <span id="rec-id">Inv #VS-9041</span>
+              <span id="rec-date">28-Aug-2026</span>
+            </div>
+            <div class="small text-left mt-xs">
+              <span>Customer: <strong id="rec-cust">Walk-in</strong></span>
+            </div>
+          </div>
+
+          <table class="receipt-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th class="text-right">Price</th>
+              </tr>
+            </thead>
+            <tbody id="rec-items-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+
+          <hr class="receipt-divider">
+          <div class="receipt-totals small">
+            <div class="flex-between">
+              <span>Subtotal:</span>
+              <span id="rec-subtotal">PKR 0</span>
+            </div>
+            <div class="flex-between">
+              <span>Discount:</span>
+              <span id="rec-discount">PKR 0</span>
+            </div>
+            <div class="flex-between font-bold border-top pt-xs mt-xs text-md">
+              <span>Total Paid:</span>
+              <span id="rec-total">PKR 0</span>
+            </div>
+          </div>
+          <div class="receipt-footer text-center mt-md">
+            <p class="small">Thank you for shopping with Vogue Studio!</p>
+            <p class="xs text-muted">Exchanges allowed within 7 days with valid receipt.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="app.closeModal('receipt-modal')">Close</button>
+        <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Receipt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
